@@ -71,7 +71,7 @@ module.exports.login = async function (req, res, next) {
 			});
 		}
 		const passwordCorrect = await user.verifyPassword(password);
-		user.password = null;
+		user.password = undefined;
 
 		if (!passwordCorrect)
 			return res.status(401).json({
