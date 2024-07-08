@@ -167,7 +167,7 @@ module.exports.addOrgUser = async function (req, res) {
 		}
 
 		const user = await User.findByPk(userId);
-		org.addUser(user);
+		await org.addUser(user);
 
 		res.status(200).json({
 			status: "success",
