@@ -134,13 +134,13 @@ module.exports.createOrg = async function (req, res) {
 				field: path,
 				message,
 			}));
-			console.error(error);
 			return res.status(422).json({
 				status: "Bad request",
 				message: " unsuccessful",
 				errors,
 			});
 		}
+		console.error(err);
 		res.status(400).json({
 			status: "Bad Request",
 			message: error.message,
@@ -174,6 +174,18 @@ module.exports.addOrgUser = async function (req, res) {
 			message: "User added to organisation successfully",
 		});
 	} catch (error) {
+		if (error.name === "SequelizeValidationError") {
+			const errors = error.errors.map(({ path, message }) => ({
+				field: path,
+				message,
+			}));
+			return res.status(422).json({
+				status: "Bad request",
+				message: " unsuccessful",
+				errors,
+			});
+		}
+		console.error(error);
 		res.status(400).json({
 			status: "Bad Request",
 			message: error.message,
