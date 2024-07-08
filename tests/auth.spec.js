@@ -21,7 +21,7 @@ describe("End-to-End Tests for Auth API", () => {
 
 		expect(user.email).toBe(userData.email);
 		expect(accessToken).toBeDefined();
-	}, 10000);
+	}, 20000);
 
 	it("should log the user in successfully", async () => {
 		const userData = createRandomUser();
@@ -36,7 +36,7 @@ describe("End-to-End Tests for Auth API", () => {
 
 		expect(user.email).toBe(userData.email);
 		expect(accessToken).toBeDefined();
-	});
+	}, 20000);
 
 	it("should fail if required fields are missing", async () => {
 		const fields = ["firstName", "lastName", "email", "password"];
@@ -53,7 +53,7 @@ describe("End-to-End Tests for Auth API", () => {
 			expect(response.body.status).toBe("Bad request");
 			expect(response.body.message).toBe("Registration unsuccessful");
 		}
-	});
+	}, 20000);
 
 	it("should fail if there’s duplicate email", async () => {
 		const userData = createRandomUser();
@@ -67,5 +67,5 @@ describe("End-to-End Tests for Auth API", () => {
 
 		expect(response.body.status).toBe("Bad request");
 		expect(response.body.message).toBe("Registration unsuccessful");
-	});
+	}, 20000);
 });

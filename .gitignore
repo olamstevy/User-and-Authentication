@@ -1,3 +1,4 @@
 /note
 /node_modules
 /coverage
+.env

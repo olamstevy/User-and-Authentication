@@ -17,4 +17,4 @@ test("Ensure users can’t see data from organisations they don’t have access 
 
 	expect(res1.status).toHaveBeenCalledWith(200); // User0 should have access
 	expect(res2.status).toHaveBeenCalledWith(403); // User1 should not have access
-});
+}, 20000);

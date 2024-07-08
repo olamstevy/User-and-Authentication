@@ -5,9 +5,9 @@ const { protect } = require("../controller/authController");
 
 const router = express.Router();
 
-router.post("/organisations/:orgId/users", addOrgUser);
-
 router.use(protect);
+
+router.post("/organisations/:orgId/users", addOrgUser);
 
 router.route("/users/:id").get(getUser);
 

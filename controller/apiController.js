@@ -3,13 +3,42 @@ const { User, Organisation } = require("../model/user_orgModel.js");
 
 module.exports.getUser = async function (req, res) {
 	try {
-		const paramId = req.params.id.replaceAll(`"`, "").replaceAll(`'`, "");
+		const userId = req.params.id.replaceAll(`"`, "").replaceAll(`'`, "");
 
-		if (paramId !== req.user.userId)
+		if (userId !== req.user.userId) {
+			const loggedInUser = await User.findByPk(req.user.userId);
+			const loggedInUserOrgs = await loggedInUser.getOrganisations();
+			const loggedInUserOrgId = loggedInUserOrgs.map((org) => org.orgId);
+
+			const user = await User.findByPk(userId);
+			const userOrgs = await user.getOrganisations(); // - [org, org]
+
+			const usersPromise = userOrgs.map(async ({ orgId }) => {
+				const org = await Organisation.findByPk(orgId);
+				const users = await org.getUsers();
+				return users;
+			}); // [[user, user], [user, user]]
+			const users = (await Promise.all(usersPromise)).flat();
+
+			const foundUser = users.find(
+				(user) =>
+					user.userId === userId &&
+					loggedInUserOrgId.includes(user.UserOrganisation.OrganisationOrgId)
+			);
+			if (foundUser) {
+				return res.status(200).json({
+					status: "success",
+					message: "You can successfully view your data",
+					data: foundUser,
+				});
+			}
+
 			return res.status(403).json({
 				status: "Forbidden Request",
-				message: "You can not view someone else record",
+				message: "You are not allowed to view this data",
+				data: foundUser,
 			});
+		}
 
 		res.status(200).json({
 			status: "success",
@@ -124,9 +153,20 @@ module.exports.addOrgUser = async function (req, res) {
 	try {
 		const { orgId } = req.params;
 		const { userId } = req.body;
+		const org = await Organisation.findByPk(orgId);
+
+		const loggedInUser = await User.findByPk(req.user.userId);
+		const ownedOrganisations = await loggedInUser.getOrganisations();
+
+		if (!ownedOrganisations.find((ownedOrg) => orgId === ownedOrg.orgId)) {
+			return res.status(403).json({
+				status: "Forbidden Request",
+				message: `You are not allowed to access ${org.name}`,
+				statusCode: 403,
+			});
+		}
 
 		const user = await User.findByPk(userId);
-		const org = await Organisation.findByPk(orgId);
 		org.addUser(user);
 
 		res.status(200).json({

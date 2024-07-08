@@ -8,7 +8,8 @@ const Organisation = require("./orgModel.js");
 // Connecting to DB
 const { DB_HOST, DB_NAME, DB_USERNAME, DB_PASSWORD, DB_PORT } = process.env;
 const sequelize = new Sequelize(
-	`postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`, {logging: false}
+	`postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`,
+	{ logging: false }
 );
 
 const UserOrganisation = sequelize.define(
