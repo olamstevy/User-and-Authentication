@@ -136,14 +136,15 @@ module.exports.createOrg = async function (req, res) {
 			}));
 			return res.status(422).json({
 				status: "Bad request",
-				message: " unsuccessful",
+				message: "Client error",
+				status: 400,
 				errors,
 			});
 		}
 		console.error(err);
 		res.status(400).json({
 			status: "Bad Request",
-			message: error.message,
+			message: "Client error",
 			statusCode: 400,
 		});
 	}

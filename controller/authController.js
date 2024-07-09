@@ -39,10 +39,19 @@ module.exports.register = async function (req, res, next) {
 				field: path,
 				message,
 			}));
+			if (errors.find((err) => (err.field = "email"))) {
+				return res.status(400).json({
+					status: "Bad request",
+					message: "Registration unsuccessful",
+					statusCode: 400,
+					errors,
+				});
+			}
 			console.error(err);
 			return res.status(422).json({
 				status: "Bad request",
 				message: "Registration unsuccessful",
+				statusCode: 400,
 				errors,
 			});
 		}
@@ -51,7 +60,7 @@ module.exports.register = async function (req, res, next) {
 		res.status(400).json({
 			status: "Bad request",
 			message: "Registration unsuccessful",
-			error: err,
+			statusCode: 400,
 		});
 	}
 };
@@ -74,12 +83,7 @@ module.exports.login = async function (req, res, next) {
 		const passwordCorrect = await user.verifyPassword(password);
 		user.password = undefined;
 
-		if (!passwordCorrect)
-			return res.status(401).json({
-				status: "Bad request",
-				message: "Authentication failed",
-				statusCode: 401,
-			});
+		if (!passwordCorrect) throw new Error();
 
 		const accessToken = generateAccessToken(user.userId);
 
@@ -95,10 +99,10 @@ module.exports.login = async function (req, res, next) {
 		});
 	} catch (error) {
 		console.error(error);
-		res.status(500).json({
-			status: "Internal Server error",
+		res.status(401).json({
+			status: "Bad Request",
 			message: "Authentication failed",
-			error,
+			statusCode: 401,
 		});
 	}
 };
@@ -129,10 +133,10 @@ module.exports.protect = async function (req, res, next) {
 		next();
 	} catch (error) {
 		console.error(error);
-		res.status(500).json({
-			status: "Internal Server error",
-			message: "Authentication failed",
-			error,
+		res.status(403).json({
+			status: "Forbidden Request",
+			message: "Authentication failed! Login to access endpoint",
+			errors: error,
 		});
 	}
 };
