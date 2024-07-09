@@ -7,6 +7,7 @@ const generateAccessToken = function (userId) {
 			expiresIn: `${process.env.JWT_EXPIRES_IN_MINS}m`,
 		});
 	} catch (error) {
+		console.error(error);
 		throw new Error(error);
 	}
 };
@@ -38,7 +39,7 @@ module.exports.register = async function (req, res, next) {
 				field: path,
 				message,
 			}));
-			// console.error(err);
+			console.error(err);
 			return res.status(422).json({
 				status: "Bad request",
 				message: "Registration unsuccessful",
@@ -46,7 +47,7 @@ module.exports.register = async function (req, res, next) {
 			});
 		}
 
-		// console.error(err);
+		console.error(err);
 		res.status(500).json({
 			status: "Bad request",
 			message: "Registration unsuccessful",
