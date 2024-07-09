@@ -12,9 +12,13 @@ app.use(express.json());
 
 app.use((req, res, next) => {
 	console.log({ body: req.body, params: req.params, url: req.url });
+	console.log("\n\n\n\n ----------------");
 	next();
 });
-app.use("/auth", authRouter);
+app.use(["/auth", "/api/auth"], authRouter);
 app.use("/api", apiRouter);
+app.use(() => {
+	res.status(404).json({ status: "Not Found" });
+});
 
 module.exports = app;
