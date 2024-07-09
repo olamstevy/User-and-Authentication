@@ -48,7 +48,7 @@ module.exports.register = async function (req, res, next) {
 		}
 
 		console.error(err);
-		res.status(500).json({
+		res.status(400).json({
 			status: "Bad request",
 			message: "Registration unsuccessful",
 			error: err,
