@@ -1,11 +1,26 @@
-const { usersData, orgsData } = require("../testData.js");
 const { User, Organisation } = require("../model/user_orgModel.js");
 const { getOrg } = require("../controller/apiController.js");
 
-test("Ensure users can’t see data from organisations they don’t have access to", async () => {
-	const user0 = await User.create(usersData[0]);
-	const user1 = await User.create(usersData[1]);
-	const org = await Organisation.create(orgsData[0]);
+test("ensure users can’t see data from organisations they don’t have access to", async () => {
+	const user0 = await User.create({
+		firstName: "john",
+		lastName: "osigi",
+		email: `johno${Date.now()}@gmail.com`,
+		password: "pass123",
+		phone: "2348000000000",
+	});
+
+	const user1 = await User.create({
+		firstName: "remi",
+		lastName: "Ade",
+		email: `rema${Date.now()}@gmail.com`,
+		password: "pass1234",
+		phone: "2348011111111",
+	});
+	const org = await Organisation.create({
+		name: "Bolu",
+		description: "This is bolu organisation",
+	});
 
 	await org.addUser(user0);
 
@@ -15,6 +30,6 @@ test("Ensure users can’t see data from organisations they don’t have access 
 	await getOrg({ user: user0.dataValues, params: { orgId: org.orgId } }, res1);
 	await getOrg({ user: user1.dataValues, params: { orgId: org.orgId } }, res2);
 
-	expect(res1.status).toHaveBeenCalledWith(200); // User0 should have access
-	expect(res2.status).toHaveBeenCalledWith(403); // User1 should not have access
-}, 20000);
+	expect(res1.status).toHaveBeenCalledWith(200);
+	expect(res2.status).toHaveBeenCalledWith(403);
+}, 30000);

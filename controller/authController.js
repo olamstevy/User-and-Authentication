@@ -15,10 +15,7 @@ module.exports.generateAccessToken = generateAccessToken;
 
 module.exports.register = async function (req, res, next) {
 	try {
-		const { firstName, lastName, email, password, phone } = req.body;
-		const regInfo = { firstName, lastName, email, password, phone };
-
-		const user = await User.create(regInfo);
+		const user = await User.create({ ...req.body });
 		user.password = null;
 
 		const accessToken = generateAccessToken(user.userId);
@@ -40,14 +37,13 @@ module.exports.register = async function (req, res, next) {
 				message,
 			}));
 			if (errors.find((err) => (err.field = "email"))) {
-				return res.status(400).json({
+				return res.status(422).json({
 					status: "Bad request",
 					message: "Registration unsuccessful",
 					statusCode: 400,
 					errors,
 				});
 			}
-			console.error(err);
 			return res.status(422).json({
 				status: "Bad request",
 				message: "Registration unsuccessful",
@@ -98,7 +94,6 @@ module.exports.login = async function (req, res, next) {
 			data: { accessToken, user },
 		});
 	} catch (error) {
-		console.error(error);
 		res.status(401).json({
 			status: "Bad Request",
 			message: "Authentication failed",
