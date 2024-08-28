@@ -14,8 +14,8 @@ This repository contains the backend implementation for the HNG Internship task.
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/olamstevy/hng_stage2_backend.git
-cd hng_stage2_backend
+git clone https://github.com/olamstevy/user_and_authentication.git
+cd user_and_authentication
 ```
 
 ### Install Dependencies
