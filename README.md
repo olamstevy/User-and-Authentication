@@ -42,7 +42,7 @@ npm test
 
 ## Project Structure
 
-- **controller/**: Request handling logic.
-- **model/**: Data models.
-- **routes/**: API routes management.
-- **tests/**: Test cases.
+> controller
+> model
+> routes
+> tests
