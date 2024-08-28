@@ -1,4 +1,3 @@
-```markdown
 # Authentication and User Management API
 
 This repository contains the backend implementation for the HNG Internship task. It is built using Node.js and Express, providing essential functionalities such as user authentication and CRUD operations.
